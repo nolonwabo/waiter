@@ -1,0 +1,18 @@
+<h1><u>Waiter Availability</u></h1>
+<form class="" method="post" action="">
+  <ul>
+    <li>{{username}}</li>
+  </ul>
+  <input type="checkbox" name="days" value="Monday"{{#if daysObj.Monday}}checked{{/if}}>Monday<br>
+<input type="checkbox" name="days" value="Tuesday"{{#if daysObj.Tuesday}}checked{{/if}}>Tuesday <br>
+<input type="checkbox" name="days" value="Wednesday"{{#if daysObj.Wednesday}}checked{{/if}}>Wednesday <br>
+<input type="checkbox" name="days" value="Thursday"{{#if daysObj.Thursday}}checked{{/if}}>Thursday <br>
+<input type="checkbox" name="days" value="Friday"{{#if daysObj.Friday}}checked{{/if}}>Friday<br>
+<input type="checkbox" name="days" value="Saturday"{{#if daysObj.Saturday}}checked{{/if}}>Saturday<br>
+<input type="checkbox" name="days" value="Sunday"{{#if daysObj.Sunday}}checked{{/if}}>Sunday
+<br></br>
+<input type="submit" value="Submit" id="button">
+</form>
+<br>
+
+{{output}}
