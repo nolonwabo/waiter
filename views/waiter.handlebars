@@ -1,8 +1,62 @@
 <form class="" method="get" action="/days">
-  <input type="submit" value="View shifts" id="button">
-  <ul>
-    {{#each waiter}}
-    <li>{{this.days}}</li>
-    {{/each}}
-  </ul>
+  <table align="center">
+    <thead>
+      <tr>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+      </tr>
+    </thead>
+    <ul>
+      <td>
+        {{#each monday}}
+          <li>{{this}}</li>
+        {{/each}}
+      </td>
+
+      <td>
+        {{#each tuesday}}
+          <li>{{this}}</li>
+        {{/each}}
+      </td>
+      <td>
+
+        {{#each wednesday}}
+          <li>{{this}}</li>
+        {{/each}}
+
+      </td>
+      <td>
+
+        {{#each thursday}}
+          <li>{{this}}</li>
+        {{/each}}
+
+      </td>
+      <td>
+
+        {{#each friday}}
+          <li>{{this}}</li>
+        {{/each}}
+
+      </td>
+      <td>
+
+        {{#each saturday}}
+          <li>{{this}}</li>
+        {{/each}}
+
+      </td>
+      <td>
+
+        {{#each sunday}}
+          <li>{{this}}</li>
+        {{/each}}
+      </td>
+    </ul>
+  </table>
 </form>
