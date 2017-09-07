@@ -60,20 +60,27 @@ app.post('/waiters/:username', function(req, res) {
             days: daysObj
           });
           //save the new user
-          storingWaitersNames.save(function(err) {
+          storingWaitersNames.save(function(err,waiterName) {
             console.log('lulo');
             if (err) {
               console.log('Error Massage:' + err);
             } else {
               res.render('index', {
-                output: shift
+                output: shift,
+                monday: waiterName.days.Monday,
+                tuesday: waiterName.days.Tuesday,
+                wednesday: waiterName.days.Wednesday,
+                thursday: waiterName.days.Thursday,
+                friday: waiterName.days.Friday,
+                saturday: waiterName.days.Saturday,
+                sunday: waiterName.days.Sunday
               })
 
               console.log('Saved to database');
             }
           })
         } else {
-          console.log("========+++++++++" + waiterName.days.Monday);
+          console.log("========+++++++++" + waiterName.days.Friday);
           //render the updates
           res.render('index', {
             output: output,
