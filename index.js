@@ -86,8 +86,6 @@ app.post('/waiters/:username', function(req, res) {
             }
           })
         } else {
-          console.log("========+++++++++" + waiterName.days.Friday);
-          //render the updates
           res.render('index', {
             output: output,
             monday: waiterName.days.Monday,
