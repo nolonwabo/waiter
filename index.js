@@ -24,9 +24,15 @@ app.get('/waiters/:username', function(req, res, next) {
   console.log(username);
 });
 
-// function coloringDays({
-// if()
-// })
+function coloringDays(colorDay) {
+  if (colorDay === 3) {
+    return 'color1';
+  } else if (colorDay < 3) {
+    return 'color2';
+  } else {
+    return 'color3';
+  }
+}
 
 app.post('/waiters/:username', function(req, res) {
   var output = 'Your shifts has been updated';
@@ -60,7 +66,7 @@ app.post('/waiters/:username', function(req, res) {
             days: daysObj
           });
           //save the new user
-          storingWaitersNames.save(function(err,waiterName) {
+          storingWaitersNames.save(function(err, waiterName) {
             console.log('lulo');
             if (err) {
               console.log('Error Massage:' + err);
@@ -133,15 +139,30 @@ app.get('/days', function(req, res) {
 
     res.render('waiter', {
       monday: Monday,
+      color1: coloringDays(Monday.length),
       tuesday: Tuesday,
+      color2: coloringDays(Tuesday.length),
       wednesday: Wednesday,
+      color3: coloringDays(Wednesday.length),
       thursday: Thursday,
+      color4: coloringDays(Thursday.length),
       friday: Friday,
+      color5: coloringDays(Friday.length),
       saturday: Saturday,
-      sunday: Sunday
+      color6: coloringDays(Saturday.length),
+      sunday: Sunday,
+      color7: coloringDays(Sunday.length)
     });
   });
 })
+app.post('/reset', function(req, res) {
+  shiftModel.remove({}, function(err, remove) {
+    if (err) {
+      return err;
+    }
+    res.render('index')
+  })
+});
 var port = process.env.PORT || 3002
 var server = app.listen(port, function() {
   console.log("Started app on port : " + port)

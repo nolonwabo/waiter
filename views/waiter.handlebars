@@ -12,46 +12,46 @@
       </tr>
     </thead>
     <ul>
-      <td>
+      <td class="{{color1}}">
         {{#each monday}}
           <li>{{this}}</li>
         {{/each}}
       </td>
 
-      <td>
+      <td class="{{color2}}">
         {{#each tuesday}}
           <li>{{this}}</li>
         {{/each}}
       </td>
-      <td>
+      <td class="{{color3}}">
 
         {{#each wednesday}}
           <li>{{this}}</li>
         {{/each}}
 
       </td>
-      <td>
+      <td class="{{color4}}">
 
         {{#each thursday}}
           <li>{{this}}</li>
         {{/each}}
 
       </td>
-      <td>
+      <td class="{{color5}}">
 
         {{#each friday}}
           <li>{{this}}</li>
         {{/each}}
 
       </td>
-      <td>
+      <td class="{{color6}}">
 
         {{#each saturday}}
           <li>{{this}}</li>
         {{/each}}
 
       </td>
-      <td>
+      <td class="{{color7}}">
 
         {{#each sunday}}
           <li>{{this}}</li>
@@ -59,4 +59,7 @@
       </td>
     </ul>
   </table>
+</form>
+<form class="" method="post" action="/reset">
+  <input type="submit" value="RESET" id="reset">
 </form>
