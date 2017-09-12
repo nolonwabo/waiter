@@ -67,7 +67,6 @@ app.post('/waiters/:username', function(req, res) {
           });
           //save the new user
           storingWaitersNames.save(function(err, waiterName) {
-            console.log('lulo');
             if (err) {
               console.log('Error Massage:' + err);
             } else {
