@@ -4,7 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
 var shiftModel = require('./model');
-// console.log(shiftModel);
+
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -14,14 +14,34 @@ app.engine('handlebars', exphbs({
   defaultLayout: 'main'
 }));
 app.set('view engine', 'handlebars');
-var massege = '';
+var massage = '';
 app.get('/waiters/:username', function(req, res, next) {
   var username = req.params.username;
-  massege = 'Please select your days ' + username;
+  shiftModel.findOne({username: username},function(err, waiterSelectedDay){
+    if(err){
+      return err;
+    }else{
+    if(waiterSelectedDay) {
+      massage = 'Please update your days ' + username;
   res.render('index', {
-    username: massege
+    username: massage,
+    monday: waiterSelectedDay.days.Monday,
+    tuesday: waiterSelectedDay.days.Tuesday,
+    wednesday: waiterSelectedDay.days.Wednesday,
+    thursday: waiterSelectedDay.days.Thursday,
+    friday: waiterSelectedDay.days.Friday,
+    saturday: waiterSelectedDay.days.Saturday,
+    sunday: waiterSelectedDay.days.Sunday
   });
-  console.log(username);
+}
+else {
+  massage = 'Please select your day(s) ' + username;
+  res.render('index',{
+    username : massage
+  })
+}
+}
+})
 });
 
 function coloringDays(colorDay) {
@@ -41,6 +61,13 @@ app.post('/waiters/:username', function(req, res) {
   var daysObj = {};
   // console.log(days);
   var username = req.params.username;
+  if(!days){
+    var text ='Please select atleast one day';
+    res.render('index',{
+      informText: text
+    })
+    return
+  }
   //convert to array
   if (!Array.isArray(days)) {
     days = [days];
