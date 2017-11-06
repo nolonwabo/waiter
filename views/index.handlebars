@@ -12,7 +12,11 @@
   <input type="checkbox" name="days" value="Saturday"{{#if saturday}} checked {{/if}}>Saturday<br>
   <input type="checkbox" name="days" value="Sunday"{{#if sunday}} checked {{/if}}>Sunday
   <br></br>
-  <input type="submit" value="Submit" id="button">
+  <button type="submit" class="btn btn-primary" id="button">SUBMIT</button>
+</form>
+<br>
+<form class="" method="get" action="/logout">
+<button type="submit" class="btn btn-primary">LOGOUT</button>
 </form>
 <br> {{output}}
 {{informText}}

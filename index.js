@@ -28,12 +28,9 @@ app.use(session({
 }))
 
 
-
-
-
 app.set('view engine', 'handlebars');
 var massage = '';
-app.get('/waiters/:username', function(req, res, next) {
+app.get('/waiters/:username',isWaiter, function(req, res, next) {
   var username = req.params.username;
   shiftModel.findOne({
     username: username
@@ -73,7 +70,7 @@ function coloringDays(colorDay) {
   }
 }
 
-app.post('/waiters/:username', function(req, res) {
+app.post('/waiters/:username',isWaiter, function(req, res) {
   var output = 'Your shifts has been updated';
   var shift = "Your shift has been added";
   var days = req.body.days;
@@ -145,7 +142,7 @@ app.post('/waiters/:username', function(req, res) {
       }
     });
 });
-app.get('/days', function(req, res) {
+app.get('/days', isAdmin, function(req, res) {
   shiftModel.find({}, function(err, avalaibleWaiters) {
     var Monday = [];
     var Tuesday = [];
@@ -179,7 +176,6 @@ app.get('/days', function(req, res) {
         }
       }
     }
-
     res.render('waiter', {
       monday: Monday,
       color1: coloringDays(Monday.length),
@@ -219,9 +215,11 @@ app.post('/login', function(req, res){
   var username = req.body.username;
   var psw = req.body.psw;
   var userRoles = users[req.body.username];
+
   if(userRoles && req.body.psw === "pass123"){
     req.session.username = req.body.username;
     req.session.userRoles = userRoles;
+
     if (userRoles ==="waiter") {
       res.redirect("/waiters/" + username);
     }
@@ -233,34 +231,38 @@ app.post('/login', function(req, res){
   }
 })
 
-app.get('/logout', function(req, res, next){
-  var userRoles = users[req.body.username];
-  var username = req.body.username;
-
-  if (!req.session.username){
-    //if (req.path !== "/login"){
-     res.redirect("/login");
-    //}
-}
-if (req.session.userRole === "admin"){
-     res.redirect("/access_denied");
-}
-if (!req.session.username){
-    //if (req.path !== "/login"){
-    res.redirect("/login");
-    //}
-}
-
-if (req.session.userRole !== "admin"){
-    res.redirect("/access_denied");
-}
-
-next();
-})
-
 app.get('/access_denied', function(req, res){
-
+  res.render('access_denied');
 })
+
+function isWaiter(req, res, next){
+  if (!req.session.username){
+    return res.redirect("/login");
+  }
+  if (req.session.username === "admin"){
+    return res.redirect("/access_denied");
+  }
+  next();
+}
+function isAdmin(req, res, next){
+  if (!req.session.username){
+    return res.redirect("/login");
+  }
+  if (req.session.username !== "admin") {
+    return res.redirect("/access_denied");
+  }
+  next();
+}
+
+app.get('/logout', function(req, res, next){
+  delete req.session.username;
+  res.redirect("/login");
+  next();
+});
+
+
+
+
 var port = process.env.PORT || 3002
 var server = app.listen(port, function() {
   console.log("Started app on port : " + port)
