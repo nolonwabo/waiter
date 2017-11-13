@@ -26,19 +26,20 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
-
-
 app.set('view engine', 'handlebars');
+
+
 var massage = '';
-app.get('/waiters/:username',isWaiter, function(req, res, next) {
+app.get('/waiters/:username', isWaiter, function(req, res, next) {
   var username = req.params.username;
   shiftModel.findOne({
     username: username
   }, function(err, waiterSelectedDay) {
+    console.log(waiterSelectedDay);
     if (err) {
       return err;
     } else {
-      if (waiterSelectedDay) {
+      if (waiterSelectedDay.days !== undefined) {
         massage = 'Please update your days ' + username;
         res.render('index', {
           username: massage,
@@ -70,7 +71,7 @@ function coloringDays(colorDay) {
   }
 }
 
-app.post('/waiters/:username',isWaiter, function(req, res) {
+app.post('/waiters/:username', isWaiter, function(req, res) {
   var output = 'Your shifts has been updated';
   var shift = "Your shift has been added";
   var days = req.body.days;
@@ -113,31 +114,32 @@ app.post('/waiters/:username',isWaiter, function(req, res) {
             if (err) {
               console.log('Error Massage:' + err);
             } else {
-              res.render('index', {
-                output: shift,
-                monday: waiterName.days.Monday,
-                tuesday: waiterName.days.Tuesday,
-                wednesday: waiterName.days.Wednesday,
-                thursday: waiterName.days.Thursday,
-                friday: waiterName.days.Friday,
-                saturday: waiterName.days.Saturday,
-                sunday: waiterName.days.Sunday
-              })
-
+              if (waiterName.days !== undefined) {
+                res.render('index', {
+                  output: shift,
+                  monday: waiterName.days.Monday,
+                  tuesday: waiterName.days.Tuesday,
+                  wednesday: waiterName.days.Wednesday,
+                  thursday: waiterName.days.Thursday,
+                  friday: waiterName.days.Friday,
+                  saturday: waiterName.days.Saturday,
+                  sunday: waiterName.days.Sunday
+                })
+              }
               console.log('Saved to database');
             }
           })
         } else {
-          res.render('index', {
-            output: output,
-            monday: waiterName.days.Monday,
-            tuesday: waiterName.days.Tuesday,
-            wednesday: waiterName.days.Wednesday,
-            thursday: waiterName.days.Thursday,
-            friday: waiterName.days.Friday,
-            saturday: waiterName.days.Saturday,
-            sunday: waiterName.days.Sunday
-          });
+            res.render('index', {
+              output: output
+              // monday: waiterName.days.Monday,
+              // tuesday: waiterName.days.Tuesday,
+              // wednesday: waiterName.days.Wednesday,
+              // thursday: waiterName.days.Thursday,
+              // friday: waiterName.days.Friday,
+              // saturday: waiterName.days.Saturday,
+              // sunday: waiterName.days.Sunday
+            });
         }
       }
     });
@@ -203,49 +205,51 @@ app.post('/reset', function(req, res) {
   })
 });
 
-app.get('/login',  function(req, res) {
-    res.render('login');
-  })
-
-  var users ={
-    "admin": "admin",
-    "Temba": "waiter"
-  };
-app.post('/login', function(req, res){
-  var username = req.body.username;
-  var psw = req.body.psw;
-  var userRoles = users[req.body.username];
-
-  if(userRoles && req.body.psw === "pass123"){
-    req.session.username = req.body.username;
-    req.session.userRoles = userRoles;
-
-    if (userRoles ==="waiter") {
-      res.redirect("/waiters/" + username);
-    }
-    else if (userRoles === "admin") {
-      res.redirect("/days");
-    }else {
-      res.redirect("/login");
-    }
-  }
+app.get('/login', function(req, res) {
+  res.render('login');
 })
 
-app.get('/access_denied', function(req, res){
+var users = {
+  "admin": "admin",
+  "Temba": "waiter"
+};
+app.post('/login', function(req, res) {
+  req.session.username = req.body.username;
+  var username = req.body.username;
+  var psw = req.body.psw;
+  shiftModel.findOne({
+    username: username,
+    password: psw
+  }, function(err, user) {
+    console.log(user)
+    if (err) {
+      return err;
+    } else if (!user) {
+      res.redirect("/access_denied");
+    } else if (user.username === 'admin') {
+      res.redirect("/days")
+    } else {
+      res.redirect("/waiters/" + username);
+    }
+  })
+})
+
+app.get('/access_denied', function(req, res) {
   res.render('access_denied');
 })
 
-function isWaiter(req, res, next){
-  if (!req.session.username){
+function isWaiter(req, res, next) {
+  if (!req.session.username) {
     return res.redirect("/login");
   }
-  if (req.session.username === "admin"){
+  if (req.session.username === "admin") {
     return res.redirect("/access_denied");
   }
   next();
 }
-function isAdmin(req, res, next){
-  if (!req.session.username){
+
+function isAdmin(req, res, next) {
+  if (!req.session.username) {
     return res.redirect("/login");
   }
   if (req.session.username !== "admin") {
@@ -254,13 +258,43 @@ function isAdmin(req, res, next){
   next();
 }
 
-app.get('/logout', function(req, res, next){
+app.get('/logout', function(req, res, next) {
   delete req.session.username;
   res.redirect("/login");
   next();
 });
 
+app.get('/register', function(req, res) {
+  res.render("register");
+});
 
+app.post('/register', function(req, res) {
+  var psw = req.body.psw;
+  var email = req.body.email;
+  var username = req.body.username;
+  shiftModel.findOne({
+    password: psw,
+    email: email
+  }, function(err, registered) {
+    if (err) {
+      return err;
+    } else if (!registered) {
+      var storingNewWaiter = new shiftModel({
+        password: psw,
+        email: email,
+        username: username
+      });
+      storingNewWaiter.save(function(err, newRegisterWaiter) {
+        if (err) {
+          return err
+        } else {
+
+          res.redirect('/login')
+        }
+      })
+    }
+  })
+})
 
 
 var port = process.env.PORT || 3002

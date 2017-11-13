@@ -8,7 +8,9 @@ mongoose.connect(MongoURL, {
 
 var storeWaiters = mongoose.model('storeWaiters', {
   username: String,
-  days: Object
+  days: Object,
+  password: String,
+  email: String
  });
 
 module.exports = storeWaiters;

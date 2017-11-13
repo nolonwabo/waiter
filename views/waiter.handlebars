@@ -23,54 +23,54 @@
     <ul>
       <td class="{{color1}}">
         {{#each monday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
       </td>
 
       <td class="{{color2}}">
         {{#each tuesday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
       </td>
       <td class="{{color3}}">
 
         {{#each wednesday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
 
       </td>
       <td class="{{color4}}">
 
         {{#each thursday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
 
       </td>
       <td class="{{color5}}">
 
         {{#each friday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
 
       </td>
       <td class="{{color6}}">
 
         {{#each saturday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
 
       </td>
       <td class="{{color7}}">
 
         {{#each sunday}}
-          <li>{{this}}</li>
+          <li><a href="/waiters/{{this}}">{{this}}</a></li>
         {{/each}}
       </td>
     </ul>
   </table>
 </form><br>
 <form class="" method="post" action="/reset">
-  <button type="button" class="btn btn-primary" id="reset">RESET</button>
+  <button type="submit" class="btn btn-primary" id="reset">RESET</button>
 </form>
 <br>
 <form class="" method="get" action="/logout">
